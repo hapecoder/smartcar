@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>远程控制</title>
+
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport'>
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Bootstrap core CSS     -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <!--  Paper Dashboard CSS    -->
+    <link href="assets/css/amaze.css" rel="stylesheet">
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="assets/js/vue.js"></script>
+    <script type="text/javascript" src="assets/js/socket.io.min.js"></script>
+    <!-- <script src="assets/js/vue.js"></script> -->
+    <style type="text/css">
+        .btn {
+            background: #f2f6f8;
+            margin: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href=" index.html ">WEB based</a>
+            </div>
+        </div>
+    </nav>
+    <div class="wrapper wrapper-full-page">
+        <div class="full-page login-page" data-color="blue">
+            <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+                            <form method="get" action="index.html">
+                                <div class="card card-login card-hidden" id="content">
+                                    <div class="header text-center">
+                                        <h3 class="title">控制页面</h3>
+                                    </div>
+                                    {% raw %}
+                                    <div class=" text-center">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            v-on:click="showVal">循迹</button>
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            v-on:click="showVal">ACC</button>
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            v-on:click="showVal">遥控</button>
+
+                                    </div>
+                                    <div class=" text-center" style="margin-bottom: 5%;">
+                                        <a>当前模式：{{mode}}</a>
+                                    </div>
+
+                                    <div class="text-center raw">
+                                        
+
+                                            <div style="margin-bottom: 5%;">
+                                                <a>最高限速:</a>  
+                                                <input style="width: 6rem;height: 3rem;" type="number"
+                                                     min="1500" max="1650" value="1600" @blur="speedlimit">
+                                               
+                                            </div>
+
+                                        
+                                    </div>
+                                    
+
+                                    <div class="content text-center">
+                                        <div>
+
+                                            <button-control id="front" class=" fa fa-arrow-up">
+                                            </button-control>
+                                        </div>
+                                        <div>
+
+                                            <button-control id="left" class=" fa fa-arrow-left">
+                                            </button-control>
+
+
+                                            <button-control id="stop" class=" fa fa-stop">
+                                            </button-control>
+
+                                            <button-control id="right" class=" fa fa-arrow-right">
+                                            </button-control>
+
+                                        </div>
+                                        <div>
+                                            <button-control id="back" class=" fa fa-arrow-down">
+                                            </button-control>
+                                        </div>
+                                        <!-- <div>
+                                            <button v-on:click="send('leftRear')" type="button"
+                                                class="btn btn-lg btn-primary glyphicon">左后转</button>
+                                            <button v-on:click="send('rightRear')" type="button"
+                                                class="btn btn-lg btn-primary glyphicon">右后转</button>
+                                        </div> -->
+                                    </div>
+
+                                    <div class="content text-center row" style="font-size: 20px;">
+                                        <a class=" col-sm-6  display-1">速度:{{ speed }}</a>
+                                        <a class=" col-sm-6 display-1">距离:{{ distance }}</a>
+                                        <!-- <button v-on:click="refresh" type="button"
+                                            class="btn btn-lg btn-primary">更新</button> -->
+                                    </div>
+                                    <div class="content text-center row" style="font-size: 20px;">
+                                        <a class="col-sm-6">电机PWM:{{ pwm_1 }}</a>
+                                        <a class="col-sm-6">舵机PWM:{{ pwm_2 }}</a>
+                                        <!-- <button v-on:click="refresh" type="button"
+                                            class="btn btn-lg btn-primary">更新</button> -->
+                                    </div>
+
+                                    <div class="content text-center">
+                                        <button id="pic" v-on:click="takepic" type="button"
+                                            class="btn btn-lg btn-primary">拍照</button><br>
+                                        <img v-bind:src="imgUrl" class=" text-center" style="width:640px;height: 240px;"
+                                            alt="图片">
+                                    </div>
+
+                                    {% endraw %}
+
+
+
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <p class="copyright pull-right">
+                        &copy;2020
+
+
+                    </p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+
+
+
+<script>
+    namespace = '/test';
+    var socket = io.connect(location.protocol + '//' + document.domain +':'+'5000'+ namespace);
+    socket.on('my_response', function (data) {
+        app1.speed = data.speed
+        app1.distance = data.distance
+        app1.pwm_1 = data.pwm_1
+        app1.pwm_2 = data.pwm_2
+    });
+    socket.on('c_response', function (data) {
+        imgUrl = "data:image/png;base64," + data.toString()
+        app1.imgUrl = imgUrl;
+    });
+
+    function IsPC() {
+        var pcflag = true;
+        var sUserAgent = navigator.userAgent.toLowerCase();
+        var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+        var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+        var bIsAndroid = sUserAgent.match(/android/i) == "android";
+        if (bIsIpad || bIsIphoneOs || bIsAndroid) {
+            pcflag = false;
+        }
+        return pcflag;
+    }
+
+    var send_flag = false;
+    var pcflag = IsPC();
+
+
+
+    Vue.component('button-control', {
+        methods: {
+            touchend: function (event) {
+                state = event.target.id;
+
+                if (pcflag) {
+                    socket.emit('my_event', {
+                        "commander": state,
+                        "count": false
+                    })
+                } else {
+                    if (send_flag) {
+                        socket.emit('my_event', {
+                            "commander": state,
+                            "count": false
+                        })
+                    }
+                    send_flag = !send_flag;
+                }
+
+            },
+            touchstart: function (event) {
+                state = event.target.id;
+                if (pcflag) {
+                    socket.emit('my_event', {
+                        "commander": state,
+                        "count": true
+                    })
+                } else {
+                    if (send_flag) {
+                        socket.emit('my_event', {
+                            "commander": state,
+                            "count": true
+                        })
+                    }
+                    send_flag = !send_flag; //第二次发
+                }
+
+            }
+        },
+        template: `<button type="button"
+        class = "btn btn-lg btn-primary "
+        @touchstart = "touchstart"
+        @mousedown = "touchstart"
+        @touchend="touchend" 
+        @mouseup="touchend"
+        > 
+        </button>`
+    });
+
+    var app1 = new Vue({
+        el: '#content',
+        data: {
+            mode: " ",
+            distance: 0,
+            speed: 0,
+            pwm_1: 1500,
+            pwm_2: 1500,
+            id: 1,
+            resp: "2.png",
+            imgUrl: '1',
+        },
+        methods: {
+            takepic: function () {
+                socket.emit('my_event', 'pic');
+                return false;   //防止form表单刷新
+
+            },
+            showVal: function (event) {
+
+                this.mode = event.target.innerText
+            },
+            speedlimit:function(event){
+                console.log(event.target.value)
+                socket.emit('my_event', {'speed':event.target.value});
+            }
+
+        }
+    });
+</script>

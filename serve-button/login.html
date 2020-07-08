@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>远程控制</title>
+
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' name='viewport'>
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Bootstrap core CSS     -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--  Paper Dashboard CSS    -->
+    <link href="assets/css/amaze.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-primary navbar-transparent navbar-absolute">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href=" index.html ">WEB based</a>
+            </div>
+        </div>
+    </nav>
+    <div class="wrapper wrapper-full-page">
+        <div class="full-page login-page" data-color="blue">
+            <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+
+                            <form method="post" action="/login">
+                                <div class="card card-login card-hidden" id="login">
+                                    <div class="header text-center">
+                                        <h3 class="title">Login</h3>
+                                    </div>
+                                    <div class="content">
+
+                                        <div class="form-group">
+                                            <label style="font-family: Arial, Helvetica, sans-serif;">Username</label>
+                                            <input type="text" placeholder="Enter username Here" autocomplete='abc'
+                                                class="form-control input-no-border" name = 'username'>
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="font-family: Arial, Helvetica, sans-serif;">Password</label>
+                                            <input type="password" placeholder="Enter Password Here"
+                                                class="form-control input-no-border" name = 'password'>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-rose btn-wd btn-lg" v-on:click=" check">Sign In</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer">
+                <div class="container-fluid">
+
+                    <p class="copyright pull-right">
+                        &copy;2020
+                        
+
+                    </p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<!-- 
+<script>
+    
+    var app2 = new Vue({
+        el: '#login',
+        methods: {
+            check: function (state) {
+                fetch("/login", {
+                    method: "POST",
+                }).then(res => res.json()).then(data => {
+
+                    if(data.loginstate==0){alert("错误")}
+
+                })
+            }
+        }
+    });
+
+</script> -->

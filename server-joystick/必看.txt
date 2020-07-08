@@ -1,0 +1,7 @@
+在树莓派上输入以下命令
+cd /home/pi/Desktop/serverinpi 
+service nginx start
+python3 run-guni.py  -b 0.0.0.0:5000 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker ws-picamera:app
+
+
+userinfo包含账户和密码

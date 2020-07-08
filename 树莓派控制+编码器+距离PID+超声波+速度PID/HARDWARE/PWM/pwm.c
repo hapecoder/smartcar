@@ -1,0 +1,82 @@
+#include "pwm.h"
+
+//////////////////////////////////////////////////////////////////////////////////	 
+//本程序只供学习使用，未经作者许可，不得用于其它任何用途
+//ALIENTEK Mini STM32开发板
+//PWM  驱动代码			   
+//正点原子@ALIENTEK
+//技术论坛:www.openedv.com
+//修改日期:2010/12/03
+//版本：V1.0
+//版权所有，盗版必究。
+//Copyright(C) 正点原子 2009-2019
+//All rights reserved
+////////////////////////////////////////////////////////////////////////////////// 	  
+
+
+//PWM输出初始化
+//arr：自动重装值
+//psc：时钟预分频数
+void TIM3_PWM_Init(u16 arr,u16 psc)//,u16 arr3,u16 psc3,u16 arr4,u16 psc4)
+{
+  GPIO_InitTypeDef GPIO_InitStructure;
+	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+	TIM_OCInitTypeDef  TIM_OCInitStructure;
+	
+	//PWM1  PA7  舵机
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);	//?????3??
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA  | RCC_APB2Periph_AFIO, ENABLE);  //??GPIO???AFIO????????
+ 
+   //????????????,??TIM3 CH2?PWM????	GPIOA.7
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7; //TIM3_CH2
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //??????
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);//???GPIO
+ 
+   //???TIM3
+	TIM_TimeBaseStructure.TIM_Period = arr; //???????????????????????????
+	TIM_TimeBaseStructure.TIM_Prescaler = psc; //??????TIMx??????????? 
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //??????:TDTS = Tck_tim
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM??????
+	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); //??TIM_TimeBaseInitStruct?????????TIMx???????
+	
+	//???TIM3 Channel2 PWM??	 
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //???????:TIM????????2
+ 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //??????
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //????:TIM???????
+	TIM_OCInitStructure.TIM_Pulse = 0;
+	TIM_OC2Init(TIM3, &TIM_OCInitStructure);  //??T??????????TIM3 OC2
+	TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);  //??TIM3?CCR2????????
+	TIM_Cmd(TIM3, ENABLE);  //??TIM3
+	
+	
+	
+	
+	//PWM2 PA6 电机
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);	//?????3??
+ 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA  | RCC_APB2Periph_AFIO, ENABLE);  //??GPIO???AFIO????????
+ 
+   //????????????,??TIM3 CH1?PWM????	GPIOA.6
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6; //TIM3_CH1
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //??????
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);//???GPIO
+	
+	//???TIM3 Channel1 PWM??	 
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //???????:TIM????????2
+ 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //??????
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //????:TIM???????
+	TIM_OCInitStructure.TIM_Pulse = 0;
+	TIM_OC1Init(TIM3, &TIM_OCInitStructure);  //??T??????????TIM3 OC1
+	TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);  //??TIM4?CCR1????????
+	TIM_Cmd(TIM3, ENABLE);  //??TIM3
+	
+	
+	
+	
+	
+
+
+
+}
+
