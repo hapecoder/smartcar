@@ -176,6 +176,9 @@
 
     namespace = '/test';
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+    socket.on('connect', function (data) {
+        console.log("client has connected")
+    });
     socket.on('my_response', function (data) {
         app1.speed = data.speed
         app1.distance = data.distance
